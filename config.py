@@ -1,6 +1,6 @@
 #This File sets the multiple parameters needed for running the code
 
-GROUPS = ['ZU_2021_1','ZU_2021_2','NQ_2021_1','RW_2021_1']
+GROUPS = ['NQ_2021_1','ZU_2021_1','ZU_2021_2','RW_2021_1']
 
 #For GPS_Extraction.py
 MainPath = '/media/amlan/Data/Thesis Data/Raw Data/' #Directory 
