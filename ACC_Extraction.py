@@ -56,11 +56,13 @@ def feature_extraction_ACC(Data,Unique_Time,freq):
         Normalised_Values = Values - np.repeat(means,freq,axis=0)
         NORM = np.sum(np.square(Normalised_Values),axis=1)
         VEDBA = np.sqrt(NORM)
+        VAR_VEDBA = np.var(VEDBA.reshape((Unique_Time-1,freq)),axis=1)
         VEDBA = np.mean(VEDBA.reshape((Unique_Time,freq)),axis=1)
         
         Features_Data = pd.DataFrame(columns=['Timestamp','X_Mean','Y_Mean','Z_Mean','X_Var','Y_Var','Z_Var','X_Max','Y_Max','Z_Max','X_Min','Y_Min','Z_Min','VeDBA','StdNorm'])
         Features_Data['Timestamp'] = t
         Features_Data['StdNorm'] = StdNorm
+        Features_Data['Var_VeDBA'] = VAR_VEDBA
         Features_Data['VeDBA'] = VEDBA
         Features_Data.iloc[:,1:4] = means
         Features_Data.iloc[:,4:7] = var

@@ -17,7 +17,7 @@ for k in GROUPS:
     for file in paths:
         print(file)
         Data = pd.read_csv(MainPath + str(k) + AddPath + file, usecols = ['Total length', 'Behavior','Start (s)', 'Stop (s)', 'Duration (s)', 'Time Elapsed','Timestamp'])
-        Data = Data.loc[Data['Duration (s)']>2]
+        Data = Data.loc[Data['Duration (s)']>3]
         Data = Data.reset_index(drop=True)
 
         time = pd.to_datetime(Data.Timestamp.loc[0])
@@ -25,7 +25,7 @@ for k in GROUPS:
         audit_start_time = time.replace(year=int(day[0:4]), month=int(day[4:6]), day=int(day[6:8]))
         vid_start_time = Data['Time Elapsed'].loc[0]
 
-        starts = np.ceil(Data['Start (s)'] - vid_start_time).astype(int) +1
+        starts = np.ceil(Data['Start (s)'] - vid_start_time).astype(int) + 1
         starts[starts<0] = 0
         stops = np.floor(Data['Stop (s)'] - vid_start_time).astype(int) - 1
 
