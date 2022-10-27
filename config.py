@@ -10,8 +10,8 @@ AddPath = '/COLLAR/GPS/' #For my database structure, this was need.
 
 
 #For ACC_Extraction.py
-FREQUENCY =  10 #Frequency of the ACC files
-WINDOW_SIZE = 20 #If frequency is n, window size can be n, 2n , 3n etc. Leave at 0 if you want no overlap
+FREQUENCY =  [50,10,10,50] #Frequency of the ACC files
+
 
 
 #For Boris Processing.py

@@ -42,13 +42,14 @@ for k in GROUPS:
 
     paths = os.listdir(MainPath)
     paths = [i for i in paths if '.ipynb_checkpoints' not in i]
-    paths = random.sample(paths,len(paths)//4)
+    #paths = random.sample(paths,10)
     
     for y in paths:
-        try:    
+          
             Data = pd.read_csv(MainPath + y,usecols = ['Timestamp','lat','lon'],dtype = {'Timestamp': str, 'lat': float, 'lon': float})
             Data['Timestamp'] = pd.to_datetime(Data['Timestamp'])
-            Data.iloc[:,1] = Data[['lat','lon']].rolling(window=3,center=True).mean()
+            Data.iloc[:,1:] = Data[['lat','lon']].rolling(window=3,center=True).mean()
+            #print(Data.head())
             Data = Data.dropna(axis=0)
             vels = []  
             time_res = 1  
@@ -65,21 +66,22 @@ for k in GROUPS:
             Data['Velocity'] = vels
             Velo =  pd.concat([Velo,Data['Velocity']],axis=0)
 
-            Data = Data[(Data['Velocity']>4) & (Data['Velocity']<10)]
+            Data = Data[(Data['Velocity']>5) & (Data['Velocity']<10)]
             Data['Behavior'] = 'RunningGPS'
-            Data['Current'] =  Data.index
-            Data['End'] =  Data['Current'].shift(-1)
-            Data['Previous'] =  Data['Current'].shift(1)
-            Data = Data[((Data['End'] - Data['Current']) == 1) & ((Data['Current'] - Data['Previous']) == 1)]
-            Data.drop(['lat','lon','Velocity','Current','Previous','End'],axis=1,inplace=True)
+            ixdiff = Data.index.to_series().diff
+            Data = Data[ixdiff(1).eq(1) | ixdiff(-1).eq(-1)]
+            #Data['Current'] =  Data.index
+            #Data['End'] =  Data['Current'].shift(-1)
+            #Data['Previous'] =  Data['Current'].shift(1)
+            #Data = Data[((Data['End'] - Data['Current']) == 1) & ((Data['Current'] - Data['Previous']) == 1)]
+            Data.drop(['lat','lon','Velocity'],axis=1,inplace=True)
             if Data.empty:
                 pass
             else:
                 filename = y.split('_')
                 Data.to_csv(RunningData + filename[-1] + '_' + filename[1]+'_labels')
                 print(filename[-1] + '_' + filename[1]+'_labels')
-        except:
-            pass
+        
   
 
 
