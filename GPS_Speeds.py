@@ -9,6 +9,8 @@ import random
 import shutil
 import config
 
+plt.rcParams.update({'font.size': 15})
+
 GROUPS = config.GROUPS
 ProcessedPath = config.SavePath
 
@@ -87,7 +89,7 @@ plt.figure(dpi=250)
 plt.hist((Velo[(Velo>2) & (Velo<10)]),bins=60) 
 plt.title('Histogram of Velocity')
 plt.xlabel('Velocity')
-plt.ylabel('Instances')
+plt.ylabel('Instances(Log Scale)')
 plt.yscale('log')
 plt.show()
 
