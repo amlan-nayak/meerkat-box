@@ -53,21 +53,27 @@ def feature_extraction_ACC(Data,Unique_Time,freq):
         mins = np.min(Values_reshape,axis=1)
         var = np.var(Values_reshape,axis=1)
         
-        Normalised_Values = Values - np.repeat(means,freq,axis=0)
+        Normalised_Values = Data.iloc[freq:Unique_Time*freq,1:4].to_numpy() - np.repeat(means.to_numpy(),freq,axis=0)
         NORM = np.sum(np.square(Normalised_Values),axis=1)
-        VEDBA = np.sqrt(NORM)
-        VAR_VEDBA = np.var(VEDBA.reshape((Unique_Time-1,freq)),axis=1)
-        VEDBA = np.mean(VEDBA.reshape((Unique_Time,freq)),axis=1)
+        Residuals = np.sqrt(NORM)
+        VAR_VEDBA = np.var(Residuals.reshape((Unique_Time-1,freq)),axis=1)
+        MAX_VEDBA = np.max(Residuals.reshape((Unique_Time-1,freq)),axis=1)    
+        MIN_VEDBA = np.min(Residuals.reshape((Unique_Time-1,freq)),axis=1)
+        MEAN_VEDBA = np.mean(Residuals.reshape((Unique_Time-1,freq)),axis=1)
         
-        Features_Data = pd.DataFrame(columns=['Timestamp','X_Mean','Y_Mean','Z_Mean','X_Var','Y_Var','Z_Var','X_Max','Y_Max','Z_Max','X_Min','Y_Min','Z_Min','VeDBA','StdNorm'])
+        
+        Features_Data = pd.DataFrame(columns=['Timestamp','X_Mean','Y_Mean','Z_Mean','X_Var','Y_Var','Z_Var','X_Max','Y_Max','Z_Max','X_Min','Y_Min','Z_Min','VeDBA','Var_VeDBA','Min_VeDBA','Max_VeDBA','StdNorm'])
         Features_Data['Timestamp'] = t
-        Features_Data['StdNorm'] = StdNorm
+        Features_Data['VeDBA'] = MEAN_VEDBA
+        Features_Data['Min_VeDBA'] = MIN_VEDBA
+        Features_Data['Max_VeDBA'] = MAX_VEDBA
         Features_Data['Var_VeDBA'] = VAR_VEDBA
-        Features_Data['VeDBA'] = VEDBA
+        Features_Data['StdNorm'] = StdNorm
         Features_Data.iloc[:,1:4] = means
         Features_Data.iloc[:,4:7] = var
         Features_Data.iloc[:,7:10] = maxes
         Features_Data.iloc[:,10:13] = mins
+
         
         
         return Features_Data
@@ -102,5 +108,10 @@ for k in range(len(Groups)):
         if Features_Data.empty:
             pass
         else:
+            filename = '_'.join(y.split('_')[0:-1])
+            Features_Data['Day'] = pd.to_datetime(Features_Data['Timestamp']).dt.date
+            for key,value in Features_Data.groupby('Day'):
+                    value.drop(['Day'],axis=1,inplace=True)
+                    value.reset_index(inplace=True)
+                    value.to_csv(SavePath + filename + '_' + str(key))
             print("Data Processed for file: ",y)
-            Features_Data.to_csv(SavePath + y)

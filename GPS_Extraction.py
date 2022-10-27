@@ -32,10 +32,25 @@ def load_GPS_files(FileName,MainPath,Group):
     print('Dimensions: ',Data.shape)
     return Data
 
+def rename_df(Data):
+    Data = Data.rename(columns={'location-lat': 'lat', 'location-lon': 'lon'})
+    return Data
+
 for i in GROUPS:
     paths = os.listdir(MainPath + str(i) + AddPath)
     paths = [k for k in paths if 'DS_Store' not in k] #DS_Store not in k is a workaround .DS_Store files in Macs
     for y in paths:
         Data = load_GPS_files(y,MainPath,i)
         Data = GPS_Extraction(Data)
-        Data.to_csv(SavePath + str(i) + '/GPS/' + y +'.csv')
+        Data = rename_df(Data)
+        if Data.empty:
+            pass
+        else:
+            filename = '_'.join(y.split('_')[0:-1])
+            Data['Day'] = pd.to_datetime(Data['Timestamp']).dt.date
+            for key,value in Data.groupby('Day'):
+                    value.drop(['Day'],axis=1,inplace=True)
+                    value.reset_index(inplace=True)
+                    value.to_csv(SavePath + filename + '_' + str(key))
+            print("Data Processed for file: ",y)
+            print('----')

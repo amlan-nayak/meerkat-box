@@ -37,4 +37,7 @@ for k in GROUPS:
         Boris = pd.DataFrame(zip(times,labels),columns=['Timestamp','Behavior'])
         final_save_path = SavePath + str(k) + '/Labels/'
         os.makedirs(final_save_path, exist_ok = True)
-        Boris.to_csv(final_save_path + file.split('Aggregated')[0] + 'labels.csv')
+        newnames = file.split('Aggregated')[0]
+        newnames = newnames.split('_')[3:]
+        newnames[0] = newnames[0][0:4] +'-' + newnames[0][4:6] + '-' + newnames[0][6:]
+        Boris.to_csv(final_save_path + '_'.join(newnames) + 'labels')
