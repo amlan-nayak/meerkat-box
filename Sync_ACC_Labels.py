@@ -1,3 +1,4 @@
+#Necessary Packages
 import numpy as np
 import pandas as pd
 import os
@@ -5,18 +6,23 @@ from pathlib import Path
 from collections import defaultdict
 import shutil
 
-
+#Configuration files
 import config
 GROUPS = config.GROUPS
-#GROUPS = ['NQ_2021_1','RW_2021_1','ZU_2021_2']
 
+#We define an empty dataframe to concat data later in our loop
 train_data = pd.DataFrame(columns=['Timestamp','Behavior','Group','Individual'])
+
+
+#We iterate through the groups and a make special dictionary with keys as ACC file names and values as audit labels for the same day as ACC files
+#We extract timestamp and behavior from the audit labels and combine with the ACC file to form a dataset of features and corresponding behavior with timestamps
 
 for k in GROUPS:
     ACCPath = '/media/amlan/Data/Thesis Data/Processed Data/'+k+'/ACC/'
     LabelPath = '/media/amlan/Data/Thesis Data/Processed Data/'+k+'/Labels/'
     ModelData = '/media/amlan/Data/Thesis Data/Processed Data/'+k+'/ModelData/'
     RunningPath = '/media/amlan/Data/Thesis Data/Processed Data/'+k+'/RunningLabels/'  
+
     shutil.rmtree(ModelData, ignore_errors=True)
     os.makedirs(ModelData, exist_ok=True)
 
@@ -36,6 +42,7 @@ for k in GROUPS:
         main_file = pd.read_csv(ACCPath + i,index_col=0)
         side_files = pd.DataFrame(columns=['Timestamp','Behavior'])
         print(i,sync_dict[i])
+
         for j in sync_dict[i]:
             label_files = pd.read_csv(LabelPath + j,index_col=0)
             #label_files = label_files[label_files['Behavior']!='Running'] #Excludes videos running bouts
@@ -52,17 +59,18 @@ for k in GROUPS:
         filename = i.split('_')
         training_data['Group'] = filename[0]
         training_data['Individual'] = filename[1]
+
         if k == 'NQ_2021_1':
             training_data['Axy'] = filename[4]
         else:
             training_data['Axy'] = filename[3][3:]
 
         if training_data.empty:
-                print('No Sync Possible for','_'.join(filename[0:2]) + '_' + filename[-1])
+            print('No Sync Possible for','_'.join(filename[0:2]) + '_' + filename[-1])
         else:
-                training_data.to_csv(ModelData + '_'.join(filename[0:2]) + '_' + filename[-1])    
-                train_data = pd.concat([train_data,training_data])  
-                print('Synced: ' + '_'.join(filename[0:2]) + '_' + filename[-1]) 
-                print('----------')
+            training_data.to_csv(ModelData + '_'.join(filename[0:2]) + '_' + filename[-1])    
+            train_data = pd.concat([train_data,training_data])  
+            print('Synced: ' + '_'.join(filename[0:2]) + '_' + filename[-1]) 
+            print('----------')
 
 train_data.to_csv('/media/amlan/Data/Thesis Data/Processed Data/'+'train_data.csv')

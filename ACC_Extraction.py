@@ -9,13 +9,13 @@ import config
 Groups = config.GROUPS
 Group_freq = config.FREQUENCY
 
-#the raw ACC files have  preciding zero entries in some files, but not all files
-#clean_leading_zeros function finds the first instant of a non zero entry and filters the data accordingly
+
+#clean_leading_zeros function finds the first instant of a non zero entry and filters the data accordingly. 
+#The zero entries are every 30 seconds at the beginning. The files without zeros start with reading directly.
 def clean_leading_zeros(df):
-    #the zero entries are every 30 seconds at the beginning. The files without zeros start with reading directly
-    #the if statement checks if such a 30 seconds data exists at the start
+    
     if pd.to_datetime(df.loc[1,'Timestamp']) - pd.to_datetime(df.loc[0,'Timestamp']) >= pd.Timedelta(1, "s") :
-        #
+        
         Leading_Zeros = df.loc[~(df.drop(['Timestamp'],axis=1)==0).all(axis=1)]
         if Leading_Zeros.empty:
             return Leading_Zeros
@@ -25,9 +25,10 @@ def clean_leading_zeros(df):
     else:
         return df
 
+#load_ACC_files load the ACC GPS files and filters them using leading zeros function
 def load_ACC_files(x,MainPath):
     
-    File = str(x) + '/' + str(x) + '.csv' 
+    File = str(x) + '/' + str(x) + '.csv' #files are located in the folders named after themselves
     Data = pd.read_csv(MainPath + File,usecols = ['Timestamp','X','Y','Z'])
     print('--------------------------------------------------')
     print('\nFile: {} with Dimensions {}'.format(x,Data.shape))
@@ -45,6 +46,7 @@ def load_ACC_files(x,MainPath):
     
 
 def feature_extraction_ACC(Data,Unique_Time,freq):
+        # We calculate various relevant features using numpy and pandas and assignment them to a dataframe accordingly. 
 
         Values = Data.iloc[0:Unique_Time*freq,1:4].to_numpy()
         Norm = np.sqrt(np.sum(np.square(Values),axis=1))
@@ -84,11 +86,11 @@ def feature_extraction_ACC(Data,Unique_Time,freq):
         return Features_Data
 
 
-
+#This for loop iterates through all files, and extracts the features for the full files. It then separates the data according to day and saves them as a csv.
 for k in range(len(Groups)):
     
-    MainPath = 'MoveComm2021/' + str(Groups[k]) + '/GPS/'
-    SavePath = 'Processed Data/' + str(Groups[k]) + '/ACC/'
+    MainPath = '/media/amlan/Data/Thesis Data/Raw Data/' + str(Groups[k]) + '/COLLAR/GPS/'
+    SavePath = '/media/amlan/Data/Thesis Data/Processed Data/' + str(Groups[k]) + '/ACC/'
 
     paths = os.listdir(MainPath)
     paths = [i for i in paths if 'DS_Store' not in i]

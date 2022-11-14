@@ -14,23 +14,30 @@ plt.rcParams.update({'font.size': 15})
 GROUPS = config.GROUPS
 ProcessedPath = config.SavePath
 
+#Haversine formula to calculate velocities 
+
 def calc_velocity(lat1,lat2,lon1,lon2,time_res):
-        R = 6371 # Radius of the earth in km
+
+        R = 6371 
         dLat = radians(lat2-lat1)
         dLon = radians(lon2-lon1)
         rLat1 = radians(lat1)
         rLat2 = radians(lat2)
         a = sin(dLat/2) * sin(dLat/2) + cos(rLat1) * cos(rLat2) * sin(dLon/2) * sin(dLon/2) 
         c = 2 * atan2(sqrt(a), sqrt(1-a))
-        d = R * c * 1000 # Distance in metres
+        d = R * c * 1000 
+
         velocity = d/time_res
+
         return velocity
 
 # %%
 
 
 
-
+#We calculate the GPS speeds for smoothed out GPS values(over 3 seconds)
+#We select all the timestamps in between intermediate values of meerkat speeds
+#We selected timestamps where the speed is maintained over subsequent timestamps
 
 Velo = pd.Series(dtype='float64')
 for k in GROUPS:
@@ -42,7 +49,7 @@ for k in GROUPS:
 
     paths = os.listdir(MainPath)
     paths = [i for i in paths if '.ipynb_checkpoints' not in i]
-    #paths = random.sample(paths,20)
+    #paths = random.sample(paths,len(paths)//3)
     
     for y in paths:
           
@@ -83,6 +90,8 @@ for k in GROUPS:
 
 
 # %%
+
+#plot of histogram of GPS calculated speeds
 
 plt.figure(dpi=250)
 plt.hist((Velo[(Velo>2) & (Velo<10)]),bins=60) 

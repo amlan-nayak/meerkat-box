@@ -5,6 +5,8 @@ import matplotlib.pyplot as plt
 import os
 import datetime as dt
 import random
+import matplotlib.dates as mdates
+
 
 plt.rcParams.update({'font.size': 22})
 # %%
@@ -16,8 +18,8 @@ ModelData = '/media/amlan/Data/Thesis Data/Processed Data/'+k+'/ModelData/'
 
 
 Modelpaths = os.listdir(ModelData)
-
-
+Modelpaths = [i for i in Modelpaths if 'Running' not in i]
+print(Modelpaths)
 
 def Group_Behaviours(df):
     df.loc[df['Behavior'] == 'Sitting vigilance','Behavior'] = 'Vigilance'
@@ -35,8 +37,11 @@ def Group_Behaviours(df):
 
 r = random.Random()
 r.seed("test")
+myFmt = mdates.DateFormatter('%H:%M')
 
 
+
+#Plots the Log Vedba alongside the behavioral audits with dotted lines showing the transitions
 for i in Modelpaths:
     
     Data = pd.read_csv(ModelData+i,usecols =['Timestamp','VeDBA','Behavior'])
@@ -48,12 +53,12 @@ for i in Modelpaths:
     Data = Data.rename(columns={'VeDBA': 'Log VeDBA'})
     Data = Group_Behaviours(Data)
     Data['Timestamp'] = pd.to_datetime(Data['Timestamp'])
-    Data1 = Data.copy()
-    #Data = Data[(Data['Timestamp']>dt.datetime(2021, 5, 16, 9,45,0)) & (Data['Timestamp']<dt.datetime(2021, 5, 16, 9, 51,30))]
+    
+    
     
 
     
-    n = r.randint(0, Data.shape[0]- Data.shape[0]//2)
+    n = random.randint(0, Data.shape[0]- Data.shape[0]//2)
     Data = Data.loc[n:n+Data.shape[0]//4,:]
     Data = Data.reset_index(drop=True)
     fig,ax = plt.subplots(figsize=(14,7),dpi=100)
@@ -63,7 +68,8 @@ for i in Modelpaths:
     ax.plot(x, z, label='Log VeDBA')
     ax.set(xlabel='Time', ylabel='Log VeDBA')
     ax.set_title(i)
-    
+    ax.xaxis.set_major_formatter(myFmt)
+
     for state, values in Data.groupby('Behavior'):
         ax.scatter(values['Timestamp'], [1.4]*len(values['Timestamp']), label=state)
     
