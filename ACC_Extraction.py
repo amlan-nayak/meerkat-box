@@ -1,16 +1,21 @@
+#The following packages are needed
 import numpy as np
-import matplotlib.pyplot as plt
 import pandas as pd
 import os
 from pathlib import Path
 
+#config files has the important directory information for the different files
 import config
 Groups = config.GROUPS
 Group_freq = config.FREQUENCY
 
+#the raw ACC files have  preciding zero entries in some files, but not all files
+#clean_leading_zeros function finds the first instant of a non zero entry and filters the data accordingly
 def clean_leading_zeros(df):
-    
+    #the zero entries are every 30 seconds at the beginning. The files without zeros start with reading directly
+    #the if statement checks if such a 30 seconds data exists at the start
     if pd.to_datetime(df.loc[1,'Timestamp']) - pd.to_datetime(df.loc[0,'Timestamp']) >= pd.Timedelta(1, "s") :
+        #
         Leading_Zeros = df.loc[~(df.drop(['Timestamp'],axis=1)==0).all(axis=1)]
         if Leading_Zeros.empty:
             return Leading_Zeros

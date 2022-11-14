@@ -42,7 +42,7 @@ for k in GROUPS:
 
     paths = os.listdir(MainPath)
     paths = [i for i in paths if '.ipynb_checkpoints' not in i]
-    #paths = random.sample(paths,10)
+    #paths = random.sample(paths,20)
     
     for y in paths:
           
@@ -66,14 +66,11 @@ for k in GROUPS:
             Data['Velocity'] = vels
             Velo =  pd.concat([Velo,Data['Velocity']],axis=0)
 
-            Data = Data[(Data['Velocity']>5) & (Data['Velocity']<10)]
+            Data = Data[(Data['Velocity']>3) & (Data['Velocity']<10)]
             Data['Behavior'] = 'RunningGPS'
             ixdiff = Data.index.to_series().diff
             Data = Data[ixdiff(1).eq(1) | ixdiff(-1).eq(-1)]
-            #Data['Current'] =  Data.index
-            #Data['End'] =  Data['Current'].shift(-1)
-            #Data['Previous'] =  Data['Current'].shift(1)
-            #Data = Data[((Data['End'] - Data['Current']) == 1) & ((Data['Current'] - Data['Previous']) == 1)]
+            
             Data.drop(['lat','lon','Velocity'],axis=1,inplace=True)
             if Data.empty:
                 pass
