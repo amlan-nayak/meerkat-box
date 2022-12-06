@@ -13,6 +13,9 @@ ProcessedPath = config.SavePath
 GROUPS = config.GROUPS 
 
 
+#The loop below uses the ML model and predicts the behavior bouts for all the GPS files 
+#it also smooths GPS files and inputs single missing NaN values between two actuals values with their mean
+
 for k in GROUPS:
     
     SavePath = ProcessedPath + str(k) + '/GPS_Behaviors/'
@@ -38,6 +41,9 @@ for k in GROUPS:
                 final_gps = pd.merge(gps, behavior, on=['Timestamp'],how='inner')
                 final_gps.reset_index(inplace=True,drop=True)
                 final_gps.to_csv(SavePath + '/' + p)  
+
+#The loop uses the predictions files, and separates them according to the specific days making a GPS Days folders 
+#The GPS folders has all the locations of all individuals of a particular group for a particular day
 
 for k in GROUPS:
     

@@ -39,6 +39,7 @@ def rename_df(Data):
     return Data
 
 #This for loop iterates through all files, and extracts the GPS data for the full files. It then separates the data according to day and saves them as a csv.
+#As the earlier functions, eliminates all NaN values, we also make sure the final file has the NaN values. From my observations, using this was faster instead of filtering all values with NaNs.
 for i in GROUPS:
 
     paths = os.listdir(MainPath + str(i) + AddPath)
