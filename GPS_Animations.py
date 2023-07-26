@@ -57,7 +57,7 @@ def sync_gps_simultaneous(data,k,j):
 
 
 k = 'ZU_2021_1' #ZGroups
-j = '2021-05-20' #Day
+j = '2021-05-19' #Day
 fig,ax= plt.subplots(dpi=250)
 data = pd.read_csv(ProcessedPath + str(k) + '/GPS_Days/'+ j,index_col=0)
 data = sync_gps_simultaneous(data,k,j)
@@ -67,10 +67,10 @@ data['codes'] = data['Behavior'].astype('category').cat.codes
 path = '/media/amlan/Data/Thesis Data/Plots/'+str(j)+'_'+str(k)
 
 
-time_start= j +' 08:56:46'
+time_start= j +' 09:20:46'
 time_start =  pd.to_datetime(time_start)
 
-time_end = j +' 09:07:47'
+time_end = j +' 09:30:47'
 time_end =  pd.to_datetime(time_end)
 
 
@@ -83,15 +83,15 @@ os.makedirs(path, exist_ok=True)
 
 
 for key,value in subset.groupby('Timestamp'):
-    fig,ax = plt.subplots(dpi=200)
+    fig,ax = plt.subplots(dpi=300)
     #ax.set_aspect('equal', adjustable='box')
 
     width = 3
     ax.set_xlim(subset['X'].dropna().min()-width, subset['X'].dropna().max()+width)
     ax.set_ylim(subset['Y'].dropna().min()-width, subset['Y'].dropna().max()+width)
     
-    ax.set_ylabel("Latitude")
-    ax.set_xlabel("Longitude")
+    ax.set_ylabel("UTM North")
+    ax.set_xlabel("UTM East")
     ax.set_title('{} : {}'.format(k,key))
     ax.tick_params(axis='both', which='major', labelsize=8)
     ax.tick_params(axis='both', which='minor', labelsize=8)

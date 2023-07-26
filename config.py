@@ -18,6 +18,8 @@ FREQUENCY =  [50,10,10,50] #Frequency of the ACC files
 BorisPath = '/media/amlan/Data/Thesis Data/BORIS Data/'
 BorisAddPath = '/Event Data/'
 
-
+#For Model_Training.py
+#Do you have atleast 50 instances running data? If yes, set following variable as True. If not, set variable as False
+RunningEnough=False
 
 
