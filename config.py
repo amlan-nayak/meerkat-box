@@ -1,10 +1,14 @@
+#Home directory, mention the main directory as a string
+DIRECTORY = '/media/amlan/Data/Thesis Data/'
+
+
 #This File sets the multiple parameters needed for running the code
 
 GROUPS = ['NQ_2021_1','ZU_2021_1','RW_2021_1','ZU_2021_2']
 
 #For GPS_Extraction.py
-MainPath = '/media/amlan/Data/Thesis Data/Raw Data/' #Directory 
-SavePath = '/media/amlan/Data/Thesis Data/Processed Data/' 
+MainPath = DIRECTORY + 'Raw Data/' #Directory 
+SavePath = DIRECTORY + 'Processed Data/' 
 AddPath = '/COLLAR/GPS/' #For my database structure, this was need. 
 
 
@@ -15,7 +19,7 @@ FREQUENCY =  [50,10,10,50] #Frequency of the ACC files
 
 
 #For Boris Processing.py
-BorisPath = '/media/amlan/Data/Thesis Data/BORIS Data/'
+BorisPath = DIRECTORY + 'BORIS Data/'
 BorisAddPath = '/Event Data/'
 
 #For Model_Training.py

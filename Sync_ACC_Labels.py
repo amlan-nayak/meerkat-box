@@ -9,7 +9,7 @@ import shutil
 #Configuration files
 import config
 GROUPS = config.GROUPS
-
+SavePath = config.SavePath
 #We define an empty dataframe to concat data later in our loop
 train_data = pd.DataFrame(columns=['Timestamp','Behavior','Group','Individual'])
 
@@ -18,10 +18,10 @@ train_data = pd.DataFrame(columns=['Timestamp','Behavior','Group','Individual'])
 #We extract timestamp and behavior from the audit labels and combine with the ACC file to form a dataset of features and corresponding behavior with timestamps
 
 for k in GROUPS:
-    ACCPath = '/media/amlan/Data/Thesis Data/Processed Data/'+k+'/ACC/'
-    LabelPath = '/media/amlan/Data/Thesis Data/Processed Data/'+k+'/Labels/'
-    ModelData = '/media/amlan/Data/Thesis Data/Processed Data/'+k+'/ModelData/'
-    RunningPath = '/media/amlan/Data/Thesis Data/Processed Data/'+k+'/RunningLabels/'  
+    ACCPath = SavePath + k + '/ACC/'
+    LabelPath = SavePath + k + '/Labels/'
+    ModelData = SavePath + k + '/ModelData/'
+    RunningPath = SavePath + k + '/RunningLabels/'  
 
     shutil.rmtree(ModelData, ignore_errors=True)
     os.makedirs(ModelData, exist_ok=True)
@@ -73,4 +73,4 @@ for k in GROUPS:
             print('Synced: ' + '_'.join(filename[0:2]) + '_' + filename[-1]) 
             print('----------')
 
-train_data.to_csv('/media/amlan/Data/Thesis Data/Processed Data/'+'train_data.csv')
+train_data.to_csv(SavePath + 'train_data.csv')

@@ -10,10 +10,10 @@ from sklearn.pipeline import make_pipeline
 import joblib
 
 #Importing variables from config
-from config import RunningEnough
+from config import RunningEnough,DIRECTORY,SavePath
 
 #Loading the data consisting of features and labels 
-data_file = '/media/amlan/Data/Thesis Data/Processed Data/kmeans_train_data'
+data_file = DIRECTORY + '/Processed Data/kmeans_train_data'
 df = pd.read_csv(data_file, index_col=0)
 df = df.reset_index(drop=True)
 
@@ -116,7 +116,7 @@ def train_rf(X_train, X_test, y_train, y_test):
 
     ax.set_title('Random Forest Confusion Matrix with labels \n\n');
     ax.set_xlabel('\nPredicted Values')
-    ax.set_ylabel('Actual Values ');
+    ax.set_ylabel('Actual Values ')
 
     ## Ticket labels - List must be in alphabetical order
     ax.xaxis.set_ticklabels(sorted(np.unique(y_train)))
@@ -131,6 +131,6 @@ def train_rf(X_train, X_test, y_train, y_test):
     x=df_copy.iloc[:,4:]  # Features
     y=df_copy['Behavior'].values  # Labels
     pipeline.fit(x, y)
-    joblib.dump(pipeline, '/media/amlan/Data/Thesis Data/Processed Data/RF_model.mod')
+    joblib.dump(pipeline, SavePath + 'RF_model.mod')
 
 train_rf(X_train, X_test, y_train, y_test)

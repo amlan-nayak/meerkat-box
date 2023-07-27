@@ -6,14 +6,14 @@ import os
 import datetime as dt
 import random
 import matplotlib.dates as mdates
-
+from config import SavePath
 
 plt.rcParams.update({'font.size': 22})
 # %%
 
 
 k = 'ZU_2021_1'
-ModelData = '/media/amlan/Data/Thesis Data/Processed Data/'+k+'/ModelData/'
+ModelData = SavePath + k + '/ModelData/'
 
 
 

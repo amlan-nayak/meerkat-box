@@ -64,7 +64,7 @@ data = sync_gps_simultaneous(data,k,j)
 
 cdict = {0:'green', 1: 'blue', 2: 'red'}
 data['codes'] = data['Behavior'].astype('category').cat.codes
-path = '/media/amlan/Data/Thesis Data/Plots/'+str(j)+'_'+str(k)
+path = MainPath + 'Plots/'+str(j)+'_'+str(k)
 
 
 time_start= j +' 09:20:46'
@@ -115,7 +115,7 @@ for key,value in subset.groupby('Timestamp'):
 
 import imageio.v2 as imageio
 png_dir = path
-with imageio.get_writer('/media/amlan/Data/Thesis Data/Plots/'+str(k + '_' + j)+'.gif', mode='I',fps=15) as writer:
+with imageio.get_writer(MainPath + 'Plots/'+str(k + '_' + j)+'.gif', mode='I',fps=15) as writer:
     for filename in sorted(os.listdir(png_dir)):
         image = imageio.imread(path+'/'+filename)
         writer.append_data(image)

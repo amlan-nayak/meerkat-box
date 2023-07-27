@@ -89,8 +89,8 @@ def feature_extraction_ACC(Data,Unique_Time,freq):
 #This for loop iterates through all files, and extracts the features for the full files. It then separates the data according to day and saves them as a csv.
 for k in range(len(Groups)):
     
-    MainPath = '/media/amlan/Data/Thesis Data/Raw Data/' + str(Groups[k]) + '/COLLAR/GPS/'
-    SavePath = '/media/amlan/Data/Thesis Data/Processed Data/' + str(Groups[k]) + '/ACC/'
+    MainPath = MainPath + str(Groups[k]) + '/COLLAR/GPS/'
+    SavePath = SavePath + str(Groups[k]) + '/ACC/'
 
     paths = os.listdir(MainPath)
     paths = [i for i in paths if 'DS_Store' not in i]

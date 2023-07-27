@@ -6,12 +6,11 @@ from pathlib import Path
 from collections import defaultdict
 import shutil
 import joblib
-
 from sklearn.preprocessing import StandardScaler
 from sklearn.ensemble import RandomForestClassifier
+from config import SavePath
 
- 
-pipeline = joblib.load('/media/amlan/Data/Thesis Data/Processed Data/RF_model.mod')
+pipeline = joblib.load(SavePath + 'RF_model.mod')
 
 
 GROUPS = ['NQ_2021_1','RW_2021_1','ZU_2021_1','ZU_2021_2']
@@ -19,8 +18,8 @@ GROUPS = ['NQ_2021_1','RW_2021_1','ZU_2021_1','ZU_2021_2']
 
 predict_data = pd.DataFrame()
 for k in GROUPS:
-    ACCPath = '/media/amlan/Data/Thesis Data/Processed Data/'+k+'/ACC/'
-    PredictPath = '/media/amlan/Data/Thesis Data/Processed Data/'+k+'/Predictions/'
+    ACCPath = SavePath + k + '/ACC/'
+    PredictPath = SavePath + k + '/Predictions/'
       
     shutil.rmtree(PredictPath, ignore_errors=True)
     os.makedirs(PredictPath, exist_ok=True)
